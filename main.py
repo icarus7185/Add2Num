@@ -8,7 +8,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, field_validator
 
-from BigNum.big_number import MyBigNumber
+from core.big_number import MyBigNumber
 
 STATIC_DIR = Path(__file__).parent / "static"
 

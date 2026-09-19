@@ -10,7 +10,7 @@ Add2Num/
 ├── requirements.txt      # Thư viện cần cài
 ├── static/
 │   └── index.html         # Giao diện web (HTML + CSS + JS)
-└── BigNum/
+└── core/                  # Đây là submodule link tới branch 'core'
     ├── big_number.py       # Logic cộng số lớn (class MyBigNumber)
     └── test.py              # Unit test cho big_number.py
 ```
@@ -34,18 +34,18 @@ pip install -r requirements.txt
 
 ## 2. Chạy Unit Test
 
-Unit test nằm ở `BigNum/test.py`, có thể chạy độc lập, kết quả in ra console.
+Unit test nằm ở `core/test.py`, có thể chạy độc lập, kết quả in ra console.
 
 Chạy từ thư mục gốc project:
 
 ```powershell
-python BigNum/test.py
+python core/test.py
 ```
 
-Hoặc chạy trực tiếp từ trong thư mục `BigNum/`:
+Hoặc chạy trực tiếp từ trong thư mục `core/`:
 
 ```powershell
-cd BigNum
+cd core
 python test.py
 ```
 
@@ -53,7 +53,7 @@ Kết quả mong đợi: mỗi test case hiển thị 1 dòng log riêng, kết 
 
 ## 3. Deploy / chạy web app
 
-Chạy server bằng Uvicorn từ thư mục gốc project (`main.py` import `BigNum.big_number`, nên phải chạy tại đây):
+Chạy server bằng Uvicorn từ thư mục gốc project (`main.py` import `core.big_number`, nên phải chạy tại đây):
 
 ```powershell
 uvicorn main:app --host 127.0.0.1 --port 8000
