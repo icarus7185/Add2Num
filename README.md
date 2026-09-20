@@ -23,7 +23,8 @@ Khuyến khích tạo virtual environment trước khi cài:
 
 ```powershell
 python -m venv venv
-venv\Scripts\activate
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\venv\Scripts\Activate.ps1
 ```
 
 Cài các thư viện cần thiết:
