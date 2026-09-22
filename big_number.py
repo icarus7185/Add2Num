@@ -18,74 +18,91 @@ class MyBigNumber:
     def __init__(self) -> None:
         self.log: List[str] = []
 
-    def sum(self, stn1: str, stn2: str) -> str:
+    # Trên ngưỡng này thì không log chi tiết từng bước nữa (chỉ log tóm tắt),
+    # để tránh việc log tạo ra hàng tỷ phần tử khi số quá lớn.
+    LOG_STEP_LIMIT = 10_000
+
+    def sum(self, stn1: str, stn2: str, verbose_log: bool = True) -> str:
         self.log = []
 
         # Bỏ số 0 thừa ở đầu (nhưng giữ lại ít nhất 1 chữ số)
         num1_clean = stn1.lstrip("0") or "0"
         num2_clean = stn2.lstrip("0") or "0"
+        len1, len2 = len(num1_clean), len(num2_clean)
+        max_len = max(len1, len2)
+
+        log_steps = verbose_log and max_len <= self.LOG_STEP_LIMIT
 
         self.log.append(f"Bắt đầu cộng: {num1_clean} + {num2_clean}")
-
-        # Đảo ngược chuỗi để duyệt từ hàng đơn vị (phải sang trái)
-        a_rev = num1_clean[::-1]
-        b_rev = num2_clean[::-1]
-
-        max_len = max(len(a_rev), len(b_rev))
-        a_rev = a_rev.ljust(max_len, "0")
-        b_rev = b_rev.ljust(max_len, "0")
-
-        self.log.append(
-            f"Căn chỉnh hai số cho bằng độ dài ({max_len} chữ số), "
-            f"đệm thêm số 0 vào bên trái số ngắn hơn."
-        )
-
-        carry = 0
-        result_digits: List[str] = []
-
-        for i in range(max_len):
-            da = int(a_rev[i])
-            db = int(b_rev[i])
-            raw_sum = da + db
-            total = raw_sum + carry
-            digit = total % 10
-            new_carry = total // 10
-
-            result_digits.append(str(digit))
-            current_result = "".join(reversed(result_digits))
-
-            luu_ket_qua = f"Lưu {digit} vào kết quả"
-            if new_carry:
-                luu_ket_qua += f" và nhớ {new_carry}"
-            luu_ket_qua += "."
-
-            if i == 0:
-                step_msg = (
-                    f"Bước {i + 1}: Lấy {da} cộng với {db} được {raw_sum}. "
-                    f"{luu_ket_qua}"
-                )
-            else:
-                step_msg = f"Bước {i + 1}: Lấy {da} cộng với {db} được {raw_sum}."
-                if carry:
-                    step_msg += f" Cộng tiếp với nhớ {carry} được {total}."
-                step_msg += f' {luu_ket_qua} Kết quả mới là {current_result}.'
-
-            self.log.append(step_msg)
-            logger.info(step_msg)
-
-            carry = new_carry
-
-        if carry:
-            result_digits.append(str(carry))
-            current_result = "".join(reversed(result_digits))
-            final_carry_msg = (
-                f'Hết các chữ số, vẫn còn nhớ {carry}. Viết thêm {carry} vào kết quả '
-                f'được kết quả mới là "{current_result}".'
+        if verbose_log and not log_steps:
+            self.log.append(
+                f"Số có tới {max_len} chữ số nên bỏ qua log chi tiết từng bước "
+                f"để tránh tốn bộ nhớ/thời gian không cần thiết."
             )
-            self.log.append(final_carry_msg)
-            logger.info(final_carry_msg)
 
-        result = "".join(reversed(result_digits)).lstrip("0") or "0"
-        self.log.append(f"Kết quả cuối cùng: {result}")
+        # Cấp phát sẵn buffer kết quả (dư 1 ô cho nhớ tràn ra ngoài cùng bên trái),
+        # điền trực tiếp đúng vị trí cuối cùng nên không cần đảo ngược kết quả.
+        result = [""] * (max_len + 1)
+        carry = 0
+        # Duyệt bằng chỉ số lùi từ cuối chuỗi gốc, không cần đảo chuỗi hay padding.
+        i, j, k = len1 - 1, len2 - 1, max_len
+        step = 0
 
-        return result
+        # 1) Cộng phần chồng lấn của cả hai số (từ hàng đơn vị).
+        # python không cấp phát vùng nhớ mới cho các biến trong vòng lặp nên không cần bắt lỗi,
+        #     việc khai báo biến ở người còn làm code phức tạp thêm.
+        while i >= 0 and j >= 0:
+            da, db = int(num1_clean[i]), int(num2_clean[j])
+            total = da + db + carry
+            digit, carry = total % 10, total // 10
+            result[k] = str(digit)
+
+            if log_steps:
+                step += 1
+                msg = f"Bước {step}: {da} + {db}"
+                if carry:
+                    msg += f" (cộng thêm nhớ) = {digit}, nhớ {carry}."
+                else:
+                    msg += f" = {digit}."
+                self.log.append(msg)
+                logger.info(msg)
+
+            i, j, k = i - 1, j - 1, k - 1
+
+        # Số nào còn dư chữ số ở phía trước thì tiếp tục xử lý số đó.
+        longer, idx = (num2_clean, j) if i < 0 else (num1_clean, i)
+
+        # 2) Cộng nốt phần dư với nhớ, dừng ngay khi hết nhớ (không cần "cộng với 0").
+        while idx >= 0 and carry:
+            total = int(longer[idx]) + carry
+            digit, carry = total % 10, total // 10
+            result[k] = str(digit)
+
+            if log_steps:
+                step += 1
+                msg = f"Bước {step}: {longer[idx]} + nhớ = {digit}"
+                msg += f", nhớ {carry}." if carry else "."
+                self.log.append(msg)
+                logger.info(msg)
+
+            idx, k = idx - 1, k - 1
+
+        # 3) Hết nhớ nhưng vẫn còn phần dư: gắn thẳng nguyên đoạn còn lại
+        # của số dài hơn vào kết quả (một lần gán), không cộng từng chữ số nữa.
+        if idx >= 0:
+            result[k - idx : k + 1] = longer[: idx + 1]
+            if log_steps:
+                msg = f"Hết nhớ, giữ nguyên phần còn lại '{longer[: idx + 1]}' của số dài hơn."
+                self.log.append(msg)
+                logger.info(msg)
+
+        start = 0
+        if carry:
+            result[0] = str(carry)
+        else:
+            start = 1  # ô đầu chưa được ghi (không tràn nhớ) nên bỏ qua
+
+        final_result = "".join(result[start:])
+        self.log.append(f"Kết quả cuối cùng: {final_result}")
+
+        return final_result

@@ -15,7 +15,6 @@ Mỗi lần gọi `sum()`, thư viện còn ghi lại log từng bước tính �
 Add2Num/
 ├── big_number.py      # Lớp MyBigNumber – logic cộng số lớn
 ├── test.py            # Unit test (unittest)
-├── requirements.txt   # Danh sách phụ thuộc (hiện không có)
 └── README.md
 ```
 
@@ -36,4 +35,9 @@ Lưu ý: đầu vào phải là chuỗi chỉ gồm các chữ số `0-9`. Số 
 python test.py
 ```
 
-Các test kiểm tra: cộng đơn giản, có nhớ, nhớ lan truyền, hai số khác độ dài, số 0, số 0 thừa ở đầu, số rất lớn và nội dung log.
+## Coverage
+
+```bash
+coverage run --branch --source=big_number test.py
+coverage report -m
+```

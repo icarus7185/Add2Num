@@ -1,2 +1,0 @@
-# Project chỉ sử dụng thư viện chuẩn của Python (logging, typing, unittest, sys),
-# nên không có phụ thuộc bên ngoài cần cài đặt.
