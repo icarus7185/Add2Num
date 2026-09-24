@@ -25,6 +25,11 @@ class MyBigNumber:
     def sum(self, stn1: str, stn2: str, verbose_log: bool = True) -> str:
         self.log = []
 
+        # Chỉ chấp nhận chuỗi chữ số ASCII 0-9 (số nguyên không âm), không rỗng.
+        for stn in (stn1, stn2):
+            if not (isinstance(stn, str) and stn.isascii() and stn.isdigit()):
+                raise ValueError(f"'{stn}' không phải là số nguyên không âm hợp lệ")
+
         # Bỏ số 0 thừa ở đầu (nhưng giữ lại ít nhất 1 chữ số)
         num1_clean = stn1.lstrip("0") or "0"
         num2_clean = stn2.lstrip("0") or "0"
@@ -53,6 +58,7 @@ class MyBigNumber:
         #     việc khai báo biến ở người còn làm code phức tạp thêm.
         while i >= 0 and j >= 0:
             da, db = int(num1_clean[i]), int(num2_clean[j])
+            carry_in = carry
             total = da + db + carry
             digit, carry = total % 10, total // 10
             result[k] = str(digit)
@@ -60,10 +66,9 @@ class MyBigNumber:
             if log_steps:
                 step += 1
                 msg = f"Bước {step}: {da} + {db}"
-                if carry:
-                    msg += f" (cộng thêm nhớ) = {digit}, nhớ {carry}."
-                else:
-                    msg += f" = {digit}."
+                if carry_in:
+                    msg += " (cộng thêm nhớ)"
+                msg += f" = {digit}, nhớ {carry}." if carry else f" = {digit}."
                 self.log.append(msg)
                 logger.info(msg)
 

@@ -45,6 +45,18 @@ class TestMyBigNumber(unittest.TestCase):
         result = self.big_number.sum("48", "79")
         self.assertTrue(any(result in line for line in self.big_number.log))
 
+    def test_log_ghi_cong_them_nho_theo_nho_tu_cot_truoc(self) -> None:
+        self.big_number.sum("19", "11")
+        self.assertIn("Bước 1: 9 + 1 = 0, nhớ 1.", self.big_number.log)
+        self.assertIn("Bước 2: 1 + 1 (cộng thêm nhớ) = 3.", self.big_number.log)
+
+    # test du lieu dau vao khong hop le
+    def test_dau_vao_khong_hop_le_bi_tu_choi(self) -> None:
+        for num1, num2 in [("-5", "3"), ("", "3"), ("12a", "3"), (" 12", "3"), ("١٢٣", "1")]:
+            with self.subTest(num1=num1, num2=num2):
+                with self.assertRaises(ValueError):
+                    self.big_number.sum(num1, num2)
+
     # test tat log chi tiet (verbose_log=False / vuot nguong LOG_STEP_LIMIT)
     def test_tat_log_chi_tiet_khi_verbose_log_false(self) -> None:
         # So nay khien vong lap chong lan, vong lap con du va buoc gan thang
