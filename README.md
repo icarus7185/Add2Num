@@ -14,7 +14,6 @@ Mỗi lần gọi `sum()`, thư viện còn ghi lại log từng bước tính �
 ```
 Add2Num/
 ├── big_number.py      # Lớp MyBigNumber – logic cộng số lớn
-├── test.py            # Unit test (unittest)
 └── README.md
 ```
 
@@ -31,13 +30,15 @@ Lưu ý: đầu vào phải là chuỗi chỉ gồm các chữ số `0-9`. Số 
 
 ## Chạy test
 
+Unit test của module này nằm ở `tests/test_core.py` trong repo chính (branch `main`). Chạy từ thư mục gốc repo chính:
+
 ```bash
-python test.py
+python tests/test_core.py
 ```
 
 ## Coverage
 
 ```bash
-coverage run --branch --source=big_number test.py
+coverage run --branch --source=core tests/test_core.py
 coverage report -m
 ```
