@@ -78,15 +78,6 @@ python api_test.py
 
 Kết quả mong đợi: mỗi test case hiển thị 1 dòng log riêng, kết thúc bằng `OK` nếu tất cả pass.
 
-### 2.4. Chạy test tự động trên GitHub Actions
-
-Workflow [`.github/workflows/unit-test.yml`](.github/workflows/unit-test.yml) tự chạy cả 2 bộ test (Python 3.12, checkout kèm submodule `core`) khi:
-
-- mở hoặc cập nhật pull request vào `main`;
-- push lên `main`;
-- bấm chạy tay trong tab **Actions** (`workflow_dispatch`).
-
-Để chặn merge khi test fail, vào **Settings → Branches → Branch protection rules** của `main`, bật **Require status checks to pass before merging** và chọn check `test`.
 
 ## 3. Deploy / chạy web app
 
