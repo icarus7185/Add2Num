@@ -177,7 +177,7 @@ Priority uses MoSCoW: **M** = Must, **S** = Should.
 | NFR-04 | Performance | A request with two 1,000,000-digit numbers shall complete without running out of memory, because of FR-15 (measured: ~0.6 s, 3 log entries). | S |
 | NFR-05 | Reusability | `core` shall not import FastAPI, Pydantic or any web-framework module. | M |
 | NFR-06 | Maintainability | Code in `core` shall follow [coding-rules.md](coding-rules.md), including: no broad `except Exception` in `core`. | M |
-| NFR-07 | Testability | `core/test.py` shall run standalone (`python core/test.py`) and print one line per test case, ending with `OK` when all pass. | M |
+| NFR-07 | Testability | `tests/test_core.py` shall run standalone (`python tests/test_core.py`) and print one line per test case, ending with `OK` when all pass. | M |
 | NFR-08 | Testability | Addition test data shall be table-driven (description, num1, num2, expected) so new cases can be added without writing new test functions. | S |
 | NFR-09 | Usability | All messages written by this application (UI, custom validation, calculation log) shall be in Vietnamese. Pydantic's built-in messages (e.g. `Field required`) stay in English. | M |
 | NFR-10 | Security | The UI shall render API data as text (`textContent`), never as HTML, to prevent script injection. | M |
