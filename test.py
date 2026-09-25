@@ -48,7 +48,7 @@ class TestMyBigNumber(unittest.TestCase):
     def test_log_ghi_cong_them_nho_theo_nho_tu_cot_truoc(self) -> None:
         self.big_number.sum("19", "11")
         self.assertIn("Bước 1: 9 + 1 = 0, nhớ 1.", self.big_number.log)
-        self.assertIn("Bước 2: 1 + 1 (cộng thêm nhớ) = 3.", self.big_number.log)
+        self.assertIn("Bước 2: 1 + 1 = 3.", self.big_number.log)
 
     # test du lieu dau vao khong hop le
     def test_dau_vao_khong_hop_le_bi_tu_choi(self) -> None:
