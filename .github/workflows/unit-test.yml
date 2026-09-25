@@ -32,7 +32,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Test phần core
-        run: python core/test.py
+        run: python tests/test_core.py
 
       - name: Test phần API
-        run: python api_test.py
+        run: python tests/test_api.py

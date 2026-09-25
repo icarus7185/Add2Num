@@ -9,13 +9,14 @@ Add2Num/
 ├── .github/workflows/
 │   └── unit-test.yml     # GitHub Actions chạy unit test khi có PR vào main
 ├── main.py              # FastAPI app (route "/" trả HTML, "/calculate" xử lý API)
-├── api_test.py          # Unit test cho API trong main.py
 ├── requirements.txt      # Thư viện cần cài
+├── tests/
+│   ├── test_core.py        # Unit test cho core/big_number.py
+│   └── test_api.py         # Unit test cho API trong main.py
 ├── static/
 │   └── index.html         # Giao diện web (HTML + CSS + JS)
 └── core/                  # Đây là submodule link tới branch 'core'
-    ├── big_number.py       # Logic cộng số lớn (class MyBigNumber)
-    └── test.py              # Unit test cho big_number.py
+    └── big_number.py       # Logic cộng số lớn (class MyBigNumber)
 ```
 
 ## 1. Cài đặt requirements
@@ -37,43 +38,32 @@ pip install -r requirements.txt
 
 ## 2. Chạy Unit Test
 
-Project có 2 bộ unit test, đều chạy độc lập và in kết quả ra console:
+Project có 2 bộ unit test nằm trong thư mục `tests/`, đều chạy độc lập từ thư mục gốc project và in kết quả ra console:
 
 | File | Kiểm tra |
 |---|---|
-| `core/test.py` | Logic cộng số lớn (`MyBigNumber`) |
-| `api_test.py` | API trong `main.py`: `GET /` và `POST /calculate` (kết quả, log, lỗi 400/422) |
+| `tests/test_core.py` | Logic cộng số lớn (`MyBigNumber`) |
+| `tests/test_api.py` | API trong `main.py`: `GET /` và `POST /calculate` (kết quả, log, lỗi 400/422) |
 
 ### 2.1. Test phần core
 
-Chạy từ thư mục gốc project:
-
 ```powershell
-python core/test.py
-```
-
-Hoặc chạy trực tiếp từ trong thư mục `core/`:
-
-```powershell
-cd core
-python test.py
+python tests/test_core.py
 ```
 
 ### 2.2. Test phần API
 
 Test dùng `TestClient` của FastAPI (cần thư viện `httpx`, đã có trong `requirements.txt`), không cần bật server.
 
-Phải chạy từ thư mục gốc project, vì `api_test.py` import `main`:
-
 ```powershell
-python api_test.py
+python tests/test_api.py
 ```
 
 ### 2.3. Chạy tất cả test
 
 ```powershell
-python core/test.py
-python api_test.py
+python tests/test_core.py
+python tests/test_api.py
 ```
 
 Kết quả mong đợi: mỗi test case hiển thị 1 dòng log riêng, kết thúc bằng `OK` nếu tất cả pass.
@@ -96,3 +86,7 @@ http://127.0.0.1:8000
 Nhập hai số nguyên không âm và bấm **Tính** để xem kết quả cùng log từng bước cộng.
 
 Log xử lý (từng bước cộng) sẽ được in ra console của server, đồng thời trả về kèm trong response API `/calculate`.
+
+## 4. Demo
+
+![Demo Add2Num](demo.png)

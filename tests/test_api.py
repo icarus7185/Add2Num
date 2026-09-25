@@ -2,14 +2,19 @@
 Unit test cho API trong main.py (GET /, POST /calculate).
 
 Chạy độc lập từ thư mục gốc project:
-    python api_test.py
+    python tests/test_api.py
 """
 
 import logging
+import sys
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 from fastapi.testclient import TestClient
+
+# Thêm thư mục gốc project vào sys.path để import được main
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from main import app
 
