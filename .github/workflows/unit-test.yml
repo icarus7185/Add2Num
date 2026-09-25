@@ -1,0 +1,38 @@
+name: Unit test
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: unit-test-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout (kèm submodule core)
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Cài Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Cài thư viện
+        run: pip install -r requirements.txt
+
+      - name: Test phần core
+        run: python core/test.py
+
+      - name: Test phần API
+        run: python api_test.py
