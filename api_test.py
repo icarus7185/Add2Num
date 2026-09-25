@@ -66,7 +66,7 @@ class TestCalculateApi(unittest.TestCase):
             [
                 "Bắt đầu cộng: 19 + 11",
                 "Bước 1: 9 + 1 = 0, nhớ 1.",
-                "Bước 2: 1 + 1 (cộng thêm nhớ) = 3.",
+                "Bước 2: 1 + 1 = 3.",
                 "Kết quả cuối cùng: 30",
             ],
         )
