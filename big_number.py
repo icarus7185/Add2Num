@@ -66,8 +66,8 @@ class MyBigNumber:
             if log_steps:
                 step += 1
                 msg = f"Bước {step}: {da} + {db}"
-                if carry_in:
-                    msg += " (cộng thêm nhớ)"
+                # if carry_in:
+                #     msg += " (cộng thêm nhớ)"
                 msg += f" = {digit}, nhớ {carry}." if carry else f" = {digit}."
                 self.log.append(msg)
                 logger.info(msg)
